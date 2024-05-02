@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3307/oshaneat
+    username: root
+    password: admin123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
+jwt:
+  privateKey: H1b5VABQEYK0itmiCOctxqHZlTDu2OaT4IUwVd4M1F4
+
+fileUpload:
+  rootPath: D:\web\upload
