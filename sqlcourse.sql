@@ -1,109 +1,89 @@
-CREATE TABLE User (
+create database course;
+use course;
+CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255),
-    email VARCHAR(255) UNIQUE,
+    username VARCHAR(255),
+    email VARCHAR(255),
     password VARCHAR(255),
-    role VARCHAR(50),
-    otherDetails VARCHAR(255)
+    roles_id INT,
+    contact VARCHAR(255),
+    class_id INT,
+    staff BOOLEAN,
+    gender VARCHAR(255),
+    guardian_name VARCHAR(255)
 );
-CREATE TABLE Class (
+
+CREATE TABLE roles (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    classId INT UNIQUE,
-    teacherId INT,
-    className VARCHAR(255),
-    subject VARCHAR(255),
-    section VARCHAR(50),
-    miscellaneousInfo VARCHAR(255),
-    FOREIGN KEY (teacherId) REFERENCES User(id)
+    role_name VARCHAR(255)
 );
-CREATE TABLE Student (
+
+CREATE TABLE classes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    classId INT,
-    name VARCHAR(255),
-    email VARCHAR(255) UNIQUE,
-    otherDetails VARCHAR(255),
-    FOREIGN KEY (classId) REFERENCES Class(id)
+    class_name VARCHAR(255)
 );
-CREATE TABLE Assignment (
+
+CREATE TABLE timetable (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    classId INT,
-    title VARCHAR(255),
-    description TEXT,
-    dueDate DATE,
-    submissionDetails VARCHAR(255),
-    FOREIGN KEY (classId) REFERENCES Class(id)
-);
-CREATE TABLE Event (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    classId INT,
-    title VARCHAR(255),
-    description TEXT,
-    startDate DATE,
-    endDate DATE,
-    location VARCHAR(255),
-    otherDetails VARCHAR(255),
-    FOREIGN KEY (classId) REFERENCES Class(id)
-);
-CREATE TABLE Examination (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    classId INT,
-    type VARCHAR(255),
     date DATE,
-    duration INT,
-    gradingDetails VARCHAR(255),
-    FOREIGN KEY (classId) REFERENCES Class(id)
+    class_id INT,
+    description TEXT
 );
 
-CREATE TABLE ExamResult (
+CREATE TABLE events_calendar (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    classId INT,
-    examType VARCHAR(255),
-    studentResults VARCHAR(255),
-    overallGrade VARCHAR(50),
-    feedback TEXT,
-    FOREIGN KEY (classId) REFERENCES Class(id)
+    event_name VARCHAR(255),
+    start_time DATETIME,
+    end_time DATETIME,
+    full_day BOOLEAN,
+    class_id INT
 );
-CREATE TABLE Attendance (
+
+CREATE TABLE assignments (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    classId INT,
-    date DATE,
-    presentStudents VARCHAR(255),
-    notes TEXT,
-    FOREIGN KEY (classId) REFERENCES Class(id)
-);
-CREATE TABLE Question (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    questionText TEXT,
-    questionType VARCHAR(50),
-    options VARCHAR(255),
-    correctAnswer VARCHAR(255),
-    partialPoints INT,
-    difficultyLevel VARCHAR(50),
     subject VARCHAR(255),
-    topic VARCHAR(255),
-    source VARCHAR(255),
-    createdBy INT,
-    lastModifiedBy INT,
-    FOREIGN KEY (createdBy) REFERENCES User(id),
-    FOREIGN KEY (lastModifiedBy) REFERENCES User(id)
+    title VARCHAR(255),
+    deadline DATE,
+    assigned_by VARCHAR(255),
+    class_id INT
 );
-CREATE TABLE Resource (
+
+CREATE TABLE examinations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    exam_name VARCHAR(255),
+    subject VARCHAR(255),
+    description TEXT,
+    exam_type VARCHAR(255),
+    class_id INT
+);
+
+CREATE TABLE result (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    exam_type VARCHAR(255),
+    pass_percentage DECIMAL(5,2),
+    description TEXT,
+    class_id INT
+);
+
+CREATE TABLE attendance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_name VARCHAR(255),
+    present BOOLEAN,
+    class_id INT
+);
+
+CREATE TABLE miscellaneous_info (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255),
-    description TEXT,
-    url VARCHAR(255),
-    type VARCHAR(50),
-    subject VARCHAR(255),
-    topic VARCHAR(255),
-    createdBy INT,
-    lastModifiedBy INT,
-    FOREIGN KEY (createdBy) REFERENCES User(id),
-    FOREIGN KEY (lastModifiedBy) REFERENCES User(id)
+    progress INT,
+    class_id INT
 );
-
-
-
-
-
-
-
+ALTER TABLE users ADD CONSTRAINT fk_roles_id FOREIGN KEY (roles_id) REFERENCES roles(id);
+ALTER TABLE users ADD CONSTRAINT fk_class_id FOREIGN KEY (class_id) REFERENCES classes(id);
+ALTER TABLE timetable ADD CONSTRAINT fk_class_id_timetable FOREIGN KEY (class_id) REFERENCES classes(id);
+ALTER TABLE eventsCalendar ADD CONSTRAINT fk_class_id_events FOREIGN KEY (class_id) REFERENCES classes(id);
+ALTER TABLE assignments ADD CONSTRAINT fk_class_id_assignment FOREIGN KEY (class_id) REFERENCES classes(id);
+ALTER TABLE examinations ADD CONSTRAINT fk_class_id_examinations FOREIGN KEY (class_id) REFERENCES classes(id);
+ALTER TABLE result ADD CONSTRAINT fk_class_id_result FOREIGN KEY (class_id) REFERENCES classes(id);
+ALTER TABLE attendance ADD CONSTRAINT fk_class_id_attendance FOREIGN KEY (class_id) REFERENCES classes(id);
+ALTER TABLE miscellaneous_info ADD CONSTRAINT fk_class_id_miscellaneous FOREIGN KEY (class_id) REFERENCES classes(id);
